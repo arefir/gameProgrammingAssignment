@@ -7,6 +7,7 @@ public class WaveSpawner : MonoBehaviour
 {
     public GameObject prefab;
     public GameObject player;
+    public GameObject playerBase;
     public float startTime;
     public float endTime;
     public float spawnRate;
@@ -22,6 +23,7 @@ public class WaveSpawner : MonoBehaviour
         var enemy = Instantiate(prefab, transform.position, transform.rotation);
         var enemyScript = enemy.GetComponent<EnemyFSM>();
         enemyScript.playerObject = player;
+        enemyScript.playerBase = playerBase;
     }
 
     // Update is called once per frame

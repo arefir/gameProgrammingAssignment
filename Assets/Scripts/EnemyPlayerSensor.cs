@@ -12,7 +12,7 @@ public class EnemyPlayerSensor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerMovement player))
+        if (other.TryGetComponent(out Collider player))
         {
             OnPlayerEnter?.Invoke(player.transform);
         }
@@ -20,7 +20,7 @@ public class EnemyPlayerSensor : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out PlayerMovement player))
+        if (other.TryGetComponent(out Collider player))
         {
             OnPlayerExit?.Invoke(other.transform.position);
         }

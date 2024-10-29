@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public Life playerLife;
+    public Life baseLife;
 
     private void Update()
     {
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("WinScreen");
         }
 
-        if (playerLife.currentHp <= 0)
+        if (playerLife.currentHp <= 0 || baseLife.currentHp <= 0)
         {
             SceneManager.LoadScene("LoseScreen");
         }
