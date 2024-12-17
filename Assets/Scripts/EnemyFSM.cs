@@ -16,6 +16,7 @@ public class EnemyFSM : MonoBehaviour
     private Animator animator;
     private float wanderTime;
     private bool wanderTimeSet;
+    private Life life;
 
     public float wanderRadius = 10;
     public float fireCooldown = 1;
@@ -27,13 +28,15 @@ public class EnemyFSM : MonoBehaviour
     public GameObject enemyBulletPrefab;
     public GameObject playerBase;
     public ParticleSystem muzzleFlash;
+    public AudioSource gunSfx;
     public enum EnemyStates
     {
         Wander,
         ChasePlayer,
         AttackPlayer,
         ChaseBase,
-        AttackBase
+        AttackBase,
+        Dead
     }
 
     public EnemyStates currentState = EnemyStates.ChaseBase;
@@ -50,19 +53,23 @@ public class EnemyFSM : MonoBehaviour
         attackPlayerSensor.OnPlayerExit += AttackPlayerSensor_OnPlayerExit;
         attackBaseSensor.OnPlayerEnter += AttackBaseSensor_OnPlayerEnter;
         attackBaseSensor.OnPlayerExit += AttackBaseSensor_OnPlayerExit;
+        life = GetComponent<Life>();
     }
 
     void Update()
     {
+        if (life.currentHp <= 0) currentState = EnemyStates.Dead;
         if (currentState == EnemyStates.Wander) { Wander(); }
         else if (currentState == EnemyStates.ChasePlayer) { ChasePlayer(); }
         else if (currentState == EnemyStates.AttackPlayer) { AttackPlayer(); }
         else if (currentState == EnemyStates.ChaseBase) { ChaseBase(); }
+        else if (currentState == EnemyStates.Dead) { Dead(); }
         else { AttackBase(); }
     }
 
     private void Wander()
     {
+        animator.Play("Walk");
         agent.enabled = true;
         agent.isStopped = false;
 
@@ -90,6 +97,7 @@ public class EnemyFSM : MonoBehaviour
 
     private void ChasePlayer()
     {
+        animator.Play("Walk");
         agent.isStopped = false;
 
         agent.SetDestination(playerObject.transform.position);
@@ -100,6 +108,7 @@ public class EnemyFSM : MonoBehaviour
 
     private void AttackPlayer()
     {
+        animator.Play("Shoot");
         agent.isStopped = true;
 
         Fire(playerObject);
@@ -114,6 +123,7 @@ public class EnemyFSM : MonoBehaviour
 
     private void ChaseBase()
     {
+        animator.Play("Walk");
         agent.isStopped = false;
 
         agent.SetDestination(playerBase.transform.position);
@@ -124,9 +134,17 @@ public class EnemyFSM : MonoBehaviour
 
     private void AttackBase()
     {
+        animator.Play("Shoot");
         agent.isStopped = true;
 
         Fire(playerBase);
+    }
+
+    private void Dead()
+    {
+        animator.Play("Death");
+        agent.isStopped = true;
+        Destroy(gameObject, 3);
     }
 
     private void ChasePlayerSensor_OnPlayerEnter(Transform player) => inChaseRange = true;
@@ -154,6 +172,7 @@ public class EnemyFSM : MonoBehaviour
             lastFireTime = Time.time;
             transform.LookAt(target.transform.position);
             muzzleFlash.Play();
+            gunSfx.Play();
             GameObject enemyBullet = Instantiate(enemyBulletPrefab);
 
             enemyBullet.transform.SetPositionAndRotation(enemyShootPoint.transform.position, enemyShootPoint.transform.rotation);

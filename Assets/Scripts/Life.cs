@@ -16,12 +16,12 @@ public class Life : MonoBehaviour
 
     private void Update()
     {
-        hpBar.fillAmount = (currentHp/maxHp);
+        hpBar.fillAmount = (currentHp / maxHp);
 
-        if (currentHp <= 0)
-        {
-            Destroy(gameObject);
-        }
+        // if (currentHp <= 0)
+        // {
+        //     Destroy(gameObject);
+        // }
     }
 
     public void TakeDamage(float damage)

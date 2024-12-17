@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
     public ParticleSystem muzzleFlash;
+    public AudioSource gunSfx;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,8 @@ public class PlayerShoot : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             muzzleFlash.Play();
+            gunSfx.Play();
+
             GameObject clone = Instantiate(prefab);
             clone.transform.SetPositionAndRotation(spawnCoord.transform.position, spawnCoord.transform.rotation);
         }

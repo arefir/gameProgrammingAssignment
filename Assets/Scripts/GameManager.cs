@@ -17,7 +17,12 @@ public class GameManager : MonoBehaviour
 
         if (playerLife.currentHp <= 0 || baseLife.currentHp <= 0)
         {
-            SceneManager.LoadScene("LoseScreen");
+            Invoke(nameof(LoadLose), 3);
         }
+    }
+
+    void LoadLose()
+    {
+        SceneManager.LoadScene("LoseScreen");
     }
 }
